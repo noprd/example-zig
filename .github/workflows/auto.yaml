@@ -1,0 +1,79 @@
+name: QA (automatic)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - develop
+      - staging
+    paths:
+      - examples/**
+      - src/**
+      - tests/**
+    # see <https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#discussion>
+    types:
+      - opened
+      - reopened
+      - unlocked
+      - edited
+      - assigned
+      - review_requested
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    name: QA
+    # runs-on: [self-hosted, "${{ github.event.inputs.os }}", x64, gpu]
+    runs-on: ${{ github.event.inputs.docker-image }}
+
+    environment: "${{ github.event.inputs.environment }}"
+    env: {}
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Action - install justfile tool
+        uses: extractions/setup-just@v2
+        with:
+          just-version: "1.14.0"
+
+      - name: Action - install zig
+        uses: goto-bus-stop/setup-zig@v2.2.0
+        with:
+          version: "0.14.0"
+
+      - name: Setup - ping basic tools and perform pre-installation
+        shell: bash
+        run: |-
+          just --version
+          zig version
+
+      - name: STEP 1 - build code
+        shell: bash
+        run: |-
+          just setup
+          just build
+
+      - name:  STEP 2 - check linting
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 3 - run unit tests
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 4 - run behavioural tests
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 4 - run as an example
+        shell: bash
+        run: |-
+          just run-exe
