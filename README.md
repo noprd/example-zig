@@ -1,5 +1,4 @@
-[![Python version: 3.11](https://img.shields.io/badge/python%20version-3.11-1464b4.svg)](https://www.python.org)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Zig version: 0.14.0](https://img.shields.io/badge/zig%20version-0.14-gold)](https://ziglang.org)
 
 [![qa manual:main](https://github.com/noprd/example-zig/actions/workflows/manual.yaml/badge.svg?branch=main)](https://github.com/noprd/example-zig/actions/workflows/manual.yaml)
 [![qa manual:staging](https://github.com/noprd/example-zig/actions/workflows/manual.yaml/badge.svg?branch=staging)](https://github.com/noprd/example-zig/actions/workflows/manual.yaml)
@@ -9,7 +8,7 @@
 
 # Example Zig #
 
-This repository provides a simple Hello-World example for the [zig]() language,
+This repository provides a simple Hello-World example for the [zig](https://ziglang.org) language,
 which in recent times has become quite a hot option
 as a simpler alternative to Rust and C++.
 
@@ -81,3 +80,5 @@ just build # compiles the binary
 just run {args} # runs without the compiled binary
 just run-exe {args} # runs the compiled binary
 ```
+
+NOTE: The hello-world example was taken from <https://zig-by-example.com/hello-world>
