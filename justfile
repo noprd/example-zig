@@ -212,4 +212,4 @@ watch-logs-all n="10":
 check-system:
     @echo "Operating System detected:  {{os_family()}}"
     @echo "zig:                        $( which zig )"
-    @echo "zig version:                $( zig --version )"
+    @echo "zig version:                $( zig version )"
