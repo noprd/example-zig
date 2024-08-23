@@ -7,10 +7,10 @@ on:
       - dev
       - develop
       - staging
+
     paths:
-      - examples/**
-      - src/**
-      - tests/**
+      - '**/*'
+
     # see <https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#discussion>
     types:
       - opened
@@ -76,4 +76,5 @@ jobs:
       - name:  STEP 4 - run as an example
         shell: bash
         run: |-
-          just run-exe
+          just run-exe "James"
+          just run-exe "Julia"

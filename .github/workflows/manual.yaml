@@ -87,7 +87,8 @@ jobs:
       - name:  STEP 4 - run as an example
         shell: bash
         run: |-
-          just run-exe
+          just run-exe "James"
+          just run-exe "Julia"
 
   # only performed if qa passes and option set
   deploy:
