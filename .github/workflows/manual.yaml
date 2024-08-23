@@ -1,0 +1,131 @@
+name: QA [+ CD] (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker-image:
+        description: Choice of docker image on which to run action.
+        default: ubuntu-latest
+        type: choice
+        options:
+          - ubuntu-latest
+
+      environment:
+        description: 'Environment to run tests against'
+        # NOTE: this option provides dropdown list of choices of environments set on GitHub (enterprise only)
+        type: environment
+        required: true
+        default: 'local'
+
+      deploy:
+        description: 'Deploy code?'
+        type: boolean
+        default: false
+
+      # NOTE: currently not used, but can use in future
+      log-level:
+        description: 'Log level'
+        default: INFO
+        type: choice
+        options:
+          - INFO
+          - DEBUG
+          - WARNING
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    name: QA
+    # runs-on: [self-hosted, "${{ github.event.inputs.os }}", x64, gpu]
+    runs-on: ${{ github.event.inputs.docker-image }}
+
+    environment: "${{ github.event.inputs.environment }}"
+    env: {}
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Action - install justfile tool
+        uses: extractions/setup-just@v2
+        with:
+          just-version: "1.14.0"
+
+      - name: Action - install zig
+        uses: goto-bus-stop/setup-zig@v2.2.0
+        with:
+          version: "0.14.0"
+
+      - name: Setup - ping basic tools and perform pre-installation
+        shell: bash
+        run: |-
+          just --version
+          zig version
+
+      - name: STEP 1 - build code
+        shell: bash
+        run: |-
+          just setup
+          just build
+
+      - name:  STEP 2 - check linting
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 3 - run unit tests
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 4 - run behavioural tests
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
+
+      - name:  STEP 4 - run as an example
+        shell: bash
+        run: |-
+          just run-exe
+
+  # only performed if qa passes and option set
+  deploy:
+    name: DEPLOY
+    needs: 'qa'
+    # job only runs if deploy-checkbox is selected
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    runs-on: ${{ github.event.inputs.docker-image }}
+
+    environment: "${{ github.event.inputs.environment }}"
+    env: {}
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Action - install justfile tool
+        uses: extractions/setup-just@v2
+        with:
+          just-version: "1.14.0"
+
+      - name: Action - install zig
+        uses: goto-bus-stop/setup-zig@v2.2.0
+        with:
+          version: "0.14.0"
+
+      - name: Setup - ping basic tools and perform pre-installation
+        shell: bash
+        run: |-
+          just --version
+          zig version
+
+      - name: STEP 1 - build code
+        shell: bash
+        run: |-
+          just setup
+          just build
+
+      - name:  STEP 1 - upload artefact
+        shell: bash
+        run: |-
+          echo "Not yet implemented"
