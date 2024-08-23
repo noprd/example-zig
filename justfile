@@ -139,7 +139,7 @@ build:
 # --------------------------------
 
 run *args:
-    @zig run src/main.zig
+    @zig run src/main.zig -- {{args}}
 
 run-exe *args:
     @./dist/${ARTEFACT}-v$(cat dist/VERSION){{EXE}} {{args}}
