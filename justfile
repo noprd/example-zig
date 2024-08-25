@@ -25,7 +25,8 @@ set positional-arguments := true
 PATH_ROOT := justfile_directory()
 CURRENT_DIR := invocation_directory()
 OS := if os_family() == "windows" { "windows" } else { "linux" }
-EXE := if os_family() == "windows" { ".exe" } else { "" }
+EXT_EXE := if os_family() == "windows" { ".exe" } else { "" }
+EXT_LIB := if os_family() == "windows" { ".pdb" } else { ".o" }
 
 # --------------------------------
 # Macros
@@ -129,10 +130,10 @@ setup:
 
 build:
     @echo "TASK: BUILD"
+    @- rm dist/${ARTEFACT}-v$(cat dist/VERSION){{EXT_EXE}} 2> /dev/null
     @zig build-exe src/main.zig
-    @mv main{{EXE}} dist/${ARTEFACT}-v$(cat dist/VERSION){{EXE}}
-    @- rm main{{EXE}}.obj 2> /dev/null
-    @- rm main.pdb 2> /dev/null
+    @mv main{{EXT_EXE}} dist/${ARTEFACT}-v$(cat dist/VERSION){{EXT_EXE}}
+    @- rm main main.* 2> /dev/null
 
 # --------------------------------
 # TARGETS: execution
@@ -142,7 +143,53 @@ run *args:
     @zig run src/main.zig -- {{args}}
 
 run-exe *args:
-    @./dist/${ARTEFACT}-v$(cat dist/VERSION){{EXE}} {{args}}
+    @./dist/${ARTEFACT}-v$(cat dist/VERSION){{EXT_EXE}} {{args}}
+
+# --------------------------------
+# TARGETS: tests
+# --------------------------------
+
+tests:
+    @just tests-unit
+    @just tests-behave
+    @just tests-integration
+
+tests-logs log_path="logs":
+    @just _reset-logs "{{log_path}}"
+    @- just tests
+    @just _display-logs
+
+tests-unit:
+    @just test-unit "tests/unit"
+
+test-unit path:
+    @just _reset-test-logs "unit"
+    @zig build test-unit --summary all
+
+tests-behave:
+    @just test-behave "tests/behave"
+
+test-behave path:
+    @just _reset-test-logs "behave"
+    @echo "Not yet implemented"
+
+tests-integration:
+    @echo "Not yet implemented"
+
+# --------------------------------
+# TARGETS: prettify
+# --------------------------------
+
+lint path:
+    @echo "Not yet implemented"
+
+lint-check path:
+    @echo "Not yet implemented"
+
+prettify:
+    @just lint "function_app.py"
+    @just lint "src"
+    @just lint "tests"
 
 # --------------------------------
 # TARGETS: clean
@@ -155,8 +202,7 @@ clean log_path="logs" session_path=".session":
     @- just _delete-if-folder-exists "{{session_path}}" 2> /dev/null
     @- just _delete-if-folder-exists "{{log_path}}" 2> /dev/null
     @echo "All build artefacts will be force removed."
-    @- just _delete-if-file-exists "main{{EXE}}.obj" 2> /dev/null
-    @- just _delete-if-file-exists "main.pdb" 2> /dev/null
+    @- just _delete-if-file-exists "main.*" 2> /dev/null
 
 # --------------------------------
 # TARGETS: logging, session

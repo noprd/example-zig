@@ -69,24 +69,28 @@ jobs:
           just setup
           just build
 
-      - name:  STEP 2 - check linting
+      - name:  STEP 2 - run linting
         shell: bash
         run: |-
-          echo "Not yet implemented"
+          # NOTE: passively checks if linting _can_ be performed
+          # not if it _has_ been performed.
+          just lint "src"
+          just lint "tests"
 
       - name:  STEP 3 - run unit tests
         shell: bash
         run: |-
-          echo "Not yet implemented"
+          just tests-unit
 
       - name:  STEP 4 - run behavioural tests
         shell: bash
         run: |-
-          echo "Not yet implemented"
+          just tests-behave
 
-      - name:  STEP 4 - run as an example
+      - name:  STEP 5 - run as an example
         shell: bash
         run: |-
+          just run-exe
           just run-exe "James"
           just run-exe "Julia"
 

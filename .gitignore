@@ -9,6 +9,8 @@
 !/README.md
 !/LICENCE
 !/justfile
+!/build.zig
+!/build.zig.zon
 # for git workflows
 !/.github
 !/.github/workflows
